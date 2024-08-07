@@ -2,7 +2,10 @@ package com.qa.gorest.client;
 
 import java.util.Map;
 
+import com.qa.gorest.utils.APIFrameworkException;
+
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 public class RestClient {
@@ -20,6 +23,32 @@ public class RestClient {
 	 */
 	public void addAuthorization() {
 		reqspecbuilder.addHeader("Authorization", "Bearer " + BEARER_TOKEN);
+	}
+
+	public void setContentType(String contenttype) {
+
+		switch (contenttype.toLowerCase()) {
+
+		case "json":
+			reqspecbuilder.setContentType(ContentType.JSON);
+			break;
+
+		case "xml":
+			reqspecbuilder.setContentType(ContentType.XML);
+			break;
+
+		case "urlencoded":
+			reqspecbuilder.setContentType(ContentType.URLENC);
+			break;
+
+		case "multipart":
+			reqspecbuilder.setContentType(ContentType.MULTIPART);
+			break;
+
+		default:
+			System.out.println("Please pass correct content type");
+			throw new APIFrameworkException("INVALIDCONTENTTYPE");
+		}
 	}
 
 	// Request Specifications
@@ -56,19 +85,20 @@ public class RestClient {
 
 	/**
 	 * This is a request specification which adds below parameters to the request
+	 * 
 	 * @param headersMap
 	 * @param queryParamsMap
 	 * @return RequestSpecification
 	 */
-	
-	public RequestSpecification createReqSpec(Map<String,String> headersMap,Map<String,Object>queryParamsMap) {
+
+	public RequestSpecification createReqSpec(Map<String, String> headersMap, Map<String, Object> queryParamsMap) {
 		reqspecbuilder.setBaseUri(BASE_URI);
 		addAuthorization();
-		if(headersMap!=null) {
+		if (headersMap != null) {
 			reqspecbuilder.addHeaders(headersMap);
 		}
-		
-		if(queryParamsMap!=null) {
+
+		if (queryParamsMap != null) {
 			reqspecbuilder.addQueryParams(queryParamsMap);
 		}
 		return reqspecbuilder.build();
