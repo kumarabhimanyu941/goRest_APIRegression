@@ -25,6 +25,11 @@ public class RestClient {
 		reqspecbuilder.addHeader("Authorization", "Bearer " + BEARER_TOKEN);
 	}
 
+	/**
+	 * This method will set the content type of the request
+	 * 
+	 * @param contenttype
+	 */
 	public void setContentType(String contenttype) {
 
 		switch (contenttype.toLowerCase()) {
@@ -103,4 +108,48 @@ public class RestClient {
 		}
 		return reqspecbuilder.build();
 	}
+
+	/**
+	 * This method will create the Request Specification using the below parameters
+	 * 
+	 * @param requestBody
+	 * @param contentType
+	 * @return RequestSpecification
+	 */
+	public RequestSpecification createReqSpec(Object requestBody, String contentType) {
+		reqspecbuilder.setBaseUri(BASE_URI);
+		addAuthorization();
+		setContentType(contentType);
+
+		if (requestBody != null) {
+			reqspecbuilder.setBody(requestBody);
+		}
+
+		return reqspecbuilder.build();
+
+	}
+
+	/**
+	 * This method will create the request specification using the below parameters
+	 * 
+	 * @param requestBody
+	 * @param contentType
+	 * @param headersMap
+	 * @return RequestSpecification
+	 */
+	public RequestSpecification createReqSpec(Object requestBody, String contentType, Map<String, String> headersMap) {
+		reqspecbuilder.setBaseUri(BASE_URI);
+		addAuthorization();
+		setContentType(contentType);
+		if (headersMap != null) {
+			reqspecbuilder.addHeaders(headersMap);
+		}
+
+		if (requestBody != null) {
+			reqspecbuilder.setBody(requestBody);
+		}
+
+		return reqspecbuilder.build();
+	}
+
 }
